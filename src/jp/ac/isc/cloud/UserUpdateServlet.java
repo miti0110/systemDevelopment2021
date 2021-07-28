@@ -30,31 +30,29 @@ public class UserUpdateServlet extends HttpServlet {
 
 	}
 
+
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		try {
+		//try {
 			 Connection users = null;
-			 try {
+			try {
 			 request.setCharacterEncoding("utf-8");
-			 Class.forName("com.mysql.jdbc.Driver");
-			 users = DriverManager.getConnection("jdbc:mysql://localhost/servlet_db?useUnicode=true&characterEncoding=utf8","root","");
+			 users = DBConnection.openConection();
 			 String id = request.getParameter("updateId");
 			 String name = request.getParameter("updateName");
 			 String picture = request.getParameter("updatePicture");
 			 Statement state = users.createStatement();
 			 state.executeUpdate("UPDATE user_table SET name='" + name + "', picture= '" + picture + "' WHERE id ='" + id + "'");
-			 state.close();
-			 users.close();
+
+			 DBConnection.closeConnection(users, state);
 			 response.sendRedirect("/select"); //UserSelectServletを呼び出す
-			 }catch(ClassNotFoundException e) {
-			 e.printStackTrace();
-			 }
+
 		}catch(SQLException e){
 			e.printStackTrace();
-			}
-	}
 
+		}
+	}
 }
